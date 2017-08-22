@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /node_modules
 /public/hot
 /public/storage
@@ -7,10 +8,12 @@
 /.vagrant
 Homestead.json
 Homestead.yaml
-
+npm-debug.log
+yarn-error.log
+.env
+=======
 vendor/
 node_modules/
-
 npm-debug.log
 
 # Laravel 4 specific
@@ -23,10 +26,10 @@ public/hot
 storage/*.key
 .env.*.php
 .env.php
-yarn-error.log
 .env
 Homestead.yaml
 Homestead.json
 
 # Rocketeer PHP task runner and deployment package. https://github.com/rocketeers/rocketeer
 .rocketeer/
+>>>>>>> c369928d5cd7ad85959cd74defd1fc40ad418b04
