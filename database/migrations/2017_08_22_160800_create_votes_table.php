@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEndpointsTable extends Migration
+class CreateVotesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateEndpointsTable extends Migration
      */
     public function up()
     {
-        Schema::create('endpoints', function (Blueprint $table) {
+        Schema::create('votes', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title');
-            $table->string('slug')->unique();
+            $table->integer('positive_votes');
+            $table->integer('negative_votes');
             $table->string('url');
             $table->timestamps();
         });
@@ -29,6 +29,6 @@ class CreateEndpointsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('endpoints');
+        Schema::dropIfExists('votes');
     }
 }

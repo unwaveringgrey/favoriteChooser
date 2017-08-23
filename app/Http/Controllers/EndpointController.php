@@ -31,7 +31,6 @@ class EndpointController extends Controller
         $this->endpoints = $endpoints;
 
         $this->middleware('auth');
-
     }
 
     /**

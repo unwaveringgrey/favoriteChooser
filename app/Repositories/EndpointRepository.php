@@ -5,7 +5,7 @@ namespace App\Repositories;
 use App\Models\Endpoint;
 use App\Repositories\Interfaces\EndpointRepositoryInterface;
 
-class ContactRepository implements ContactRepositoryInterface
+class EndpointRepository implements EndpointRepositoryInterface
 {
 
     protected $endpoint;
@@ -24,6 +24,16 @@ class ContactRepository implements ContactRepositoryInterface
     {
         return $this->endpoint->find($id);
     }
+
+    public function getRandomEndpoint($id)
+    {
+        $endpoints = $this->endpoint->all();
+
+        $endpoint = $endpoints->random();
+
+        return $endpoint;
+    }
+
 
     public function newEndpoint()
     {
