@@ -4,6 +4,8 @@ namespace App\Repositories;
 
 use App\Models\Endpoint;
 use App\Repositories\Interfaces\EndpointRepositoryInterface;
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
 
 class EndpointRepository implements EndpointRepositoryInterface
 {
@@ -25,7 +27,7 @@ class EndpointRepository implements EndpointRepositoryInterface
         return $this->endpoint->find($id);
     }
 
-    public function getRandomEndpoint($id)
+    public function getRandomEndpoint()
     {
         $endpoints = $this->endpoint->all();
 
@@ -34,10 +36,20 @@ class EndpointRepository implements EndpointRepositoryInterface
         return $endpoint;
     }
 
-
-    public function newEndpoint()
+    public function loadRandomEndpoint()
     {
-        return new Endpoint();
+        $endpoint = $this->getRandomEndpoint();
+        $json = $this->loadEndpoint($endpoint->url);
+        return $json;
+    }
+
+    public function loadEndpoint($url)
+    {
+        $client = new Client();
+        $request = new Request('GET', $url);
+        $response = $client->send($request, ['timeout' => 8]);
+        $json = \GuzzleHttp\json_decode($response->getBody()->getContents());
+        return $json;
     }
 
 }

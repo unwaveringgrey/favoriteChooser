@@ -1,0 +1,8 @@
+div.favorite_box {
+    margin: 20px;
+    background-color: #ffffff;
+    border: 1px solid black;
+    opacity: 0.5;
+    font-weight: bold;
+    color: #000000;
+}

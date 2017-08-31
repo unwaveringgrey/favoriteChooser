@@ -17,10 +17,32 @@ class Endpoint extends Model
     ];
 
     /**
-     * Get the ratings for the endpoint.
+     * Get the votes for the endpoint.
      */
-    public function ratings()
+    public function vote()
     {
-        return $this->hasMany('App\Models\Rating');
+        return $this->hasOne('App\Models\Vote')->first();
     }
+
+    /**
+     * Increment the votes for this endpoint.
+     */
+    public function incrementVotes()
+    {
+        $vote = $this->vote();
+        $vote->positive_votes = $vote->positive_votes+1;
+        $vote->save();
+    }
+
+    /**
+     * Decrement the votes for this endpoint.
+     */
+    public function decrementVotes()
+    {
+        $vote = $this->vote();
+        $vote->negative_votes = $vote->negative_votes+1;
+        $vote->save();
+
+    }
+
 }

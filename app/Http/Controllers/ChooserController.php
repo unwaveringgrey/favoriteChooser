@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 //use App\Http\Controllers\Controller;
+use App\Repositories\EndpointRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
@@ -26,10 +27,8 @@ class ChooserController extends Controller
      *
      * @return void
      */
-    public function __construct(EndpointsRepository $endpoints)
+    public function __construct(EndpointRepository $endpoints)
     {
-        $this->middleware('auth');
-
         $this->endpoints = $endpoints;
     }
 
@@ -40,9 +39,21 @@ class ChooserController extends Controller
      */
     public function play()
     {
-        $favorites = $this->generateFavoritePair();
+        $favorites = $this->generateEndpointPair();
 
         return view('chooser.play', ['favorites' => $favorites]);
+    }
+
+    /**
+     * Serves a page containing a single random favorite
+     *
+     * @return view
+     */
+    public function random()
+    {
+        $favorite = $this->randomEndpoint();
+
+        return view('chooser.random', ['favorite' => $favorite]);
     }
 
     /**
@@ -50,106 +61,81 @@ class ChooserController extends Controller
      *
      * @return null
      */
-    public function submit()
+    public function submit(Request $request)
     {
-        $favorites = $this->generateFavoritePair();
+        $lesser_favorite = ($request->selected_favorite ==$request->first_favorite?$request->second_favorite:$request->first_favorite);
+        $this->endpoints->findById($request->selected_favorite)->incrementVotes();
+        $this->endpoints->findById($lesser_favorite)->decrementVotes();
 
-        return view('chooser.play', ['favorites' => $favorites]);
+        return redirect()->route('favorite_select');
     }
 
     /**
-     * A helper function that generates a pair of favorites
+     * A helper function that generates a pair of favorites. These are DB results, and still need to be loaded
      *
      * @return array
      */
-    public function generateFavoritePair()
+    public function generateEndpointPair()
     {
-        $first_favorite = $this->generateFavorite();
+        $pair = $this->chooseEndpointPair();
 
-        $second_favorite = false;
+        $favorites = $this->loadEndpointPair($pair);
+
+        return $favorites;
+    }
+
+    /**
+     * A helper function that generates a pair of favorites. These are DB results, and still need to be loaded
+     *
+     * @return array
+     */
+    public function chooseEndpointPair()
+    {
+        $first_favorite = $this->getRandomEndpoint();
+
         do{
-            $second_favorite = $this->generateFavorite();
-        } while($second_favorite == $first_favorite);
+            $second_favorite = $this->getRandomEndpoint();
+        } while($second_favorite->id == $first_favorite->id);
 
         return ["first_favorite"=>$first_favorite, "second_favorite"=>$second_favorite];
-
     }
 
     /**
-     * A helper function that generates a favorite
+     * A function that loads a pair of endpoints given in an array
      *
      * @return array
      */
-    public function generateFavorite()
+    public function loadEndpointPair($pair)
     {
-        $random = rand(0,99);
+        //["first_favorite"=>$first_favorite, "second_favorite"=>$second_favorite]
+        $pair['first_id'] = $pair['first_favorite']->id;
+        $pair['second_id'] = $pair['second_favorite']->id;
+        $pair['first_favorite'] = $this->endpoints->loadEndpoint($pair['first_favorite']->url);
+        $pair['second_favorite'] = $this->endpoints->loadEndpoint($pair['second_favorite']->url);
 
-        if($random < 69) {
-            $favorite = $this->randomFavorite();
-        } else {
-            $favorite = $this->generateNewFavorite(3);
-        }
-
-        return $favorite;
-
+        return $pair;
     }
 
-
     /**
-     * A helper function that searches through the connected APIs for a new favorite
+     * A helper function that generates a random endpoint from the DB
      *
      * @return array
      */
-    public function generateNewFavorite($max_attempts)
+    public function loadRandomEndpoint()
     {
-        $attempts = 0;
-        $favorite = false;
-
-        while($max_attempts<$attempts && $this->favoriteExists($favorite) == false)
-        {
-            $endpoint = $this->randomEndpoint();
-
-            $favorite = $endpoint->randomData();
-        }
-
-        return $favorite;
-
+        $endpoint = $this->endpoints->loadRandomEndpoint();
+        return $endpoint;
     }
 
     /**
-     * A helper function that checks if a potential favorite already exists in the database
-     *
-     * @return bool
-     */
-    public function favoriteExists($favorite)
-    {
-        if($favorite == false) {
-            return false;
-        }
-//implement this check
-        return false;
-    }
-
-    /**
-     * A helper function that pulls a random favorite from the database
+     * A helper function that generates a random endpoint from the DB
      *
      * @return array
      */
-    public function randomFavorite()
-    {
-//yeah, implement this too
-    }
-
-    /**
-     * A helper function that generates a random enpoint from the DB
-     *
-     * @return array
-     */
-    public function randomEndpoint()
+    public function getRandomEndpoint()
     {
         $endpoint = $this->endpoints->getRandomEndpoint();
         return $endpoint;
     }
-
 
 }

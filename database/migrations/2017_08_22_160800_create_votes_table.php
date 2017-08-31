@@ -15,9 +15,12 @@ class CreateVotesTable extends Migration
     {
         Schema::create('votes', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer( 'endpoint_id')->unsigned();
+            $table->foreign('endpoint_id')
+                ->references('id')->on('endpoints')
+                ->onDelete('cascade');
             $table->integer('positive_votes');
             $table->integer('negative_votes');
-            $table->string('url');
             $table->timestamps();
         });
     }

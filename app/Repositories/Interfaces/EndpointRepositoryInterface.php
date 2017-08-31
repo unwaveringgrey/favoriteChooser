@@ -2,11 +2,17 @@
 
 namespace App\Repositories\Interfaces;
 
-interface BaseRepositoryInterface
+interface EndpointRepositoryInterface
 {
     public function findBy($arg1, $arg2);
 
     public function findById($id);
+
+    public function getRandomEndpoint();
+
+    public function loadRandomEndpoint();
+
+    public function loadEndpoint($url);
 
 }
 
