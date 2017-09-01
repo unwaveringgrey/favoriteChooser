@@ -44,8 +44,15 @@
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
                     <a href="{{route('favorite_select')}}">
-                        <input type="button" name="play_button" id="play_button" value="PLAY!" >
+                        <input type="button" name="play_button" id="play_button" class="nav_button" value="PLAY!" >
                     </a>
+                    <a href="{{route('endpoint_add')}}">
+                        <input type="button" name="add_endpoint_button" id="add_endpoint_button" class="nav_button" value="Add Favorite" >
+                    </a>
+                    <a href="{{route('home')}}">
+                        <input type="button" name="home_button" id="home_button" class="nav_button" value="Home" >
+                    </a>
+
                 </ul>
             </div>
         </div>

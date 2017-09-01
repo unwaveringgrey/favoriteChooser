@@ -9,6 +9,9 @@
             <div class="favorite_box">
                 {{$top_favorite['data']->name}}<br/>
                 Votes: {{$top_favorite['net_votes']}}
+                @if(isset($top_favorite['image_url']))
+                    <img src="{{$top_favorite['image_url']}}">
+                @endif
             </div>
             @endforeach
             <br/>

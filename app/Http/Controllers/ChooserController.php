@@ -45,7 +45,7 @@ class ChooserController extends Controller
     }
 
     /**
-     * handles a submitted 
+     * handles a submitted favorite
      *
      * @return null
      */
@@ -93,12 +93,12 @@ class ChooserController extends Controller
 
     /**
      * A function that loads a pair of endpoints given in an array
+     * It prepares all of the data necessary to display the endpoints
      *
      * @return array
      */
     public function loadEndpointPair($pair)
     {
-        //["first_favorite"=>$first_favorite, "second_favorite"=>$second_favorite]
         $pair['first_id'] = $pair['first_favorite']->id;
         $pair['second_id'] = $pair['second_favorite']->id;
         $pair['first_votes'] = $pair['first_favorite']->net_votes;
@@ -112,9 +112,9 @@ class ChooserController extends Controller
     }
 
     /**
-     * A helper function that generates a random endpoint from the DB
+     * A helper function that loads a random endpoint from the DB
      *
-     * @return array
+     * @return object
      */
     public function loadRandomEndpoint()
     {
@@ -123,9 +123,9 @@ class ChooserController extends Controller
     }
 
     /**
-     * A helper function that generates a random endpoint from the DB
+     * A helper function that chooses a random endpoint from the list of probabilities
      *
-     * @return array
+     * @return object
      */
     public function getRandomEndpoint($probabilities)
     {
@@ -143,7 +143,7 @@ class ChooserController extends Controller
 
         }
 
-        //something weird happened. Get a new random endpoint
+        //If $endpoint == false then something weird happened. Get a new random endpoint.
         //This is likely a result of 1 being the chosen random number, but the probability not quite adding up to 1
         //thanks to rounding errors
         if($endpoint == false) {
