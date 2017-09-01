@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\EndpointsAPI;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Repositories\EndpointRepository;
@@ -32,26 +32,40 @@ class EndpointController extends Controller
     }
 
     /**
-     * Query and return a list of the endpoints
-     * @return collection
+     * This serves the "add_endpoint" page
+     * @return view
      */
-    public function getEndpoints()
+    public function add()
     {
-        $endpointList = $this->endpoints->all();
-
-        return $endpointList;
+        return view('endpoint.add', []);
     }
 
     /**
-     * Return a particular endpoint
-     * @return endpoint
+     * Handles saving the endpoint
+     * @return null
      */
-    public function getEndpoint($id)
+    public function submit(Request $request)
     {
-        $endpoint = $this->endpoints->findById($id);
+        $this->validate($request, [
+            'title' => 'required|unique:endpoints|max:255',
+            'url' => 'required|unique:endpoints|max:255',
+            'image_url' => 'max:255'
+        ]);
 
-        return $endpoint;
+        $endpoint = $this->endpoints->newEndpoint();
+        $endpoint->fill($request->all());
+        $endpoint->slug = str_slug($endpoint->title);
+        $endpoint->save();
+
+        return redirect()->route('home');
     }
+
+
+
+
+
+
+
 
     /**
      * Delete an endpoint

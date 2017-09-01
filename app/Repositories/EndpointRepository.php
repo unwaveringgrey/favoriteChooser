@@ -17,6 +17,11 @@ class EndpointRepository implements EndpointRepositoryInterface
         $this->endpoint = $endpoint;
     }
 
+    public function newEndpoint()
+    {
+        return new Endpoint();
+    }
+
     public function findBy($arg1, $arg2)
     {
         return $this->endpoint->where($arg1, $arg2)->get();
@@ -29,9 +34,7 @@ class EndpointRepository implements EndpointRepositoryInterface
 
     public function getRandomEndpoint()
     {
-        $endpoints = $this->endpoint->all();
-
-        $endpoint = $endpoints->random();
+        $endpoint = $this->endpoint->all()->random(1)->first();
 
         return $endpoint;
     }

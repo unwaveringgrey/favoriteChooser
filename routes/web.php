@@ -13,17 +13,15 @@
 
 //Auth::routes();
 
-Route::get('/', function () {
-    return redirect("/chooser");
-});
+Route::get('/', 'HomeController@home')->name('home');
 
 Route::get('/chooser', 'ChooserController@play')->name('favorite_select');
 
 Route::post('/chooser', 'ChooserController@submit')->name('favorite_submit');
 
-//Route::post('/chooser', function (\Illuminate\Http\Request $request) {
-//    echo "HERE"; var_dump($request->all());exit();
-//})->name('favorite_submit');
+Route::get('/add_endpoint', 'EndpointController@add')->name('endpoint_add');
+
+Route::post('/add_endpoint', 'EndpointController@submit')->name('endpoint_submit');
 
 //mainly useful for debugging
-Route::get('/random', 'ChooserController@random')->name('random_endpoint');
+Route::get('/random', 'HomeController@random')->name('random_endpoint');

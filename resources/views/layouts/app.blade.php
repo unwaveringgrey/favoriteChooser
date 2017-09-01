@@ -43,7 +43,9 @@
 
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
-
+                    <a href="{{route('favorite_select')}}">
+                        <input type="button" name="play_button" id="play_button" value="PLAY!" >
+                    </a>
                 </ul>
             </div>
         </div>

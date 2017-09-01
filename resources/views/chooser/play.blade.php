@@ -6,13 +6,21 @@
             {{ csrf_field() }}
             <h1>Select A Favorite:</h1>
                 <div class="favorite_box">
-                    {{$favorites['first_favorite']->name}}
+                    {{$favorites['first_favorite']->name}}<br/>
+                    Votes: {{$favorites['first_votes']}}
                     <input type='hidden' name="first_favorite" id="first_favorite" class="favorite_id" value='{{$favorites['first_id']}}'/>
+                    @if(isset($favorites['first_image_url']))
+                        <img src="{{$favorites['first_image_url']}}">
+                    @endif
                 </div>
                 <br/>
                 <div class="favorite_box">
-                    {{$favorites['second_favorite']->name}}
+                    {{$favorites['second_favorite']->name}}<br/>
+                    Votes: {{$favorites['second_votes']}}
                     <input type='hidden' name="second_favorite" id="second_favorite" class="favorite_id" value='{{$favorites['second_id']}}'/>
+                    @if(isset($favorites['second_image_url']))
+                        <img src="{{$favorites['second_image_url']}}">
+                    @endif
                 </div>
                 <input type='hidden' name="selected_favorite" id='selected_favorite' value=''>
             <br/>

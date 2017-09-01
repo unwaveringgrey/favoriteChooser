@@ -13,7 +13,7 @@ class Endpoint extends Model
      * @var array
      */
     protected $fillable = [
-        'title', 'url'
+        'title', 'url', 'image_url'
     ];
 
     /**
@@ -21,7 +21,7 @@ class Endpoint extends Model
      */
     public function vote()
     {
-        return $this->hasOne('App\Models\Vote')->first();
+        return $this->hasOne('App\Models\Vote')->firstOrCreate([]);
     }
 
     /**
@@ -42,7 +42,6 @@ class Endpoint extends Model
         $vote = $this->vote();
         $vote->negative_votes = $vote->negative_votes+1;
         $vote->save();
-
     }
 
 }

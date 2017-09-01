@@ -45,18 +45,6 @@ class ChooserController extends Controller
     }
 
     /**
-     * Serves a page containing a single random favorite
-     *
-     * @return view
-     */
-    public function random()
-    {
-        $favorite = $this->randomEndpoint();
-
-        return view('chooser.random', ['favorite' => $favorite]);
-    }
-
-    /**
      * handles a submitted 
      *
      * @return null
@@ -110,6 +98,10 @@ class ChooserController extends Controller
         //["first_favorite"=>$first_favorite, "second_favorite"=>$second_favorite]
         $pair['first_id'] = $pair['first_favorite']->id;
         $pair['second_id'] = $pair['second_favorite']->id;
+        $pair['first_votes'] = $pair['first_favorite']->vote()->net_votes();
+        $pair['second_votes'] = $pair['second_favorite']->vote()->net_votes();
+        $pair['first_image_url'] = $pair['first_favorite']->image_url;
+        $pair['second_image_url'] = $pair['second_favorite']->image_url;
         $pair['first_favorite'] = $this->endpoints->loadEndpoint($pair['first_favorite']->url);
         $pair['second_favorite'] = $this->endpoints->loadEndpoint($pair['second_favorite']->url);
 

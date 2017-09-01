@@ -19,8 +19,8 @@ class CreateVotesTable extends Migration
             $table->foreign('endpoint_id')
                 ->references('id')->on('endpoints')
                 ->onDelete('cascade');
-            $table->integer('positive_votes');
-            $table->integer('negative_votes');
+            $table->integer('positive_votes')->default(0);
+            $table->integer('negative_votes')->default(0);
             $table->timestamps();
         });
     }
