@@ -74,15 +74,18 @@ class ChooserController extends Controller
 
     /**
      * A helper function that generates a pair of favorites. These are DB results, and still need to be loaded
+     * They're generated randomly but with a greater chance of selection as they have more of the total net_votes
      *
      * @return array
      */
     public function chooseEndpointPair()
     {
-        $first_favorite = $this->getRandomEndpoint();
+        $probability = $this->endpoints->generateEndpointProbability();
+
+        $first_favorite = $this->getRandomEndpoint($probability);
 
         do{
-            $second_favorite = $this->getRandomEndpoint();
+            $second_favorite = $this->getRandomEndpoint($probability);
         } while($second_favorite->id == $first_favorite->id);
 
         return ["first_favorite"=>$first_favorite, "second_favorite"=>$second_favorite];
@@ -98,8 +101,8 @@ class ChooserController extends Controller
         //["first_favorite"=>$first_favorite, "second_favorite"=>$second_favorite]
         $pair['first_id'] = $pair['first_favorite']->id;
         $pair['second_id'] = $pair['second_favorite']->id;
-        $pair['first_votes'] = $pair['first_favorite']->vote()->net_votes();
-        $pair['second_votes'] = $pair['second_favorite']->vote()->net_votes();
+        $pair['first_votes'] = $pair['first_favorite']->net_votes;
+        $pair['second_votes'] = $pair['second_favorite']->net_votes;
         $pair['first_image_url'] = $pair['first_favorite']->image_url;
         $pair['second_image_url'] = $pair['second_favorite']->image_url;
         $pair['first_favorite'] = $this->endpoints->loadEndpoint($pair['first_favorite']->url);
@@ -124,9 +127,29 @@ class ChooserController extends Controller
      *
      * @return array
      */
-    public function getRandomEndpoint()
+    public function getRandomEndpoint($probabilities)
     {
-        $endpoint = $this->endpoints->getRandomEndpoint();
+        $prob = mt_rand()/mt_getrandmax();
+        $endpoint = false;
+        foreach ($probabilities as $probability)
+        {
+            if($probability->probability > $prob)
+            {
+                $endpoint = $probability;
+                break;
+            } else {
+                $prob = $prob - $probability->probability;
+            }
+
+        }
+
+        //something weird happened. Get a new random endpoint
+        //This is likely a result of 1 being the chosen random number, but the probability not quite adding up to 1
+        //thanks to rounding errors
+        if($endpoint == false) {
+            $endpoint = $this->getRandomEndpoint($probabilities);
+        }
+
         return $endpoint;
     }
 

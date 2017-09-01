@@ -6,6 +6,7 @@ use App\Models\Endpoint;
 use App\Repositories\Interfaces\EndpointRepositoryInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
+use Illuminate\Support\Facades\DB;
 
 class EndpointRepository implements EndpointRepositoryInterface
 {
@@ -53,6 +54,28 @@ class EndpointRepository implements EndpointRepositoryInterface
         $response = $client->send($request, ['timeout' => 8]);
         $json = \GuzzleHttp\json_decode($response->getBody()->getContents());
         return $json;
+    }
+
+    public function generateEndpointProbability()
+    {
+
+
+        $endpoints = DB::table('endpoints')
+            ->join('votes', 'endpoints.id', '=', 'votes.endpoint_id')
+            ->select('endpoints.*', DB::raw("(SELECT votes.positive_votes - votes.negative_votes) as net_votes")
+                , DB::raw("(SELECT Case When net_votes > 0 then net_votes+1 else 1 end  ) as probability"))
+            ->orderBy('probability', 'DESC')
+            ->get();
+        $count = 0;
+        foreach ($endpoints as $endpoint) {
+            $count = $count+$endpoint->probability;
+        }
+        foreach ($endpoints as $endpoint) {
+            $endpoint->probability = $endpoint->probability/$count;
+        }
+
+        return $endpoints;
+
     }
 
 }

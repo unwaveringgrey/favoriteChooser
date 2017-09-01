@@ -60,13 +60,6 @@ class EndpointController extends Controller
         return redirect()->route('home');
     }
 
-
-
-
-
-
-
-
     /**
      * Delete an endpoint
      * @param int $id
