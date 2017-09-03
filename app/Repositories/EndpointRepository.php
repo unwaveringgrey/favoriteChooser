@@ -68,10 +68,10 @@ class EndpointRepository implements EndpointRepositoryInterface
             ->get();
         $count = 0;
         foreach ($endpoints as $endpoint) {
-            $count = $count+$endpoint->probability;
+            $count = $count + $endpoint->probability;
         }
         foreach ($endpoints as $endpoint) {
-            $endpoint->probability = $endpoint->probability/$count;
+            $endpoint->probability = $endpoint->probability / $count;
         }
 
         return $endpoints;

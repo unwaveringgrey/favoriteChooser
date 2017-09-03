@@ -40,6 +40,10 @@ class ChooserController extends Controller
     public function play()
     {
         $favorites = $this->generateEndpointPair();
+        if($favorites==false)
+        {
+            return Redirect::route('home')->with('error', 'Not enough Favorites exist to play. Add more Favorites.');
+        }
 
         return view('chooser.play', ['favorites' => $favorites]);
     }
@@ -66,6 +70,10 @@ class ChooserController extends Controller
     public function generateEndpointPair()
     {
         $pair = $this->chooseEndpointPair();
+        if($pair == false)
+        {
+            return false;
+        }
 
         $favorites = $this->loadEndpointPair($pair);
 
@@ -81,6 +89,11 @@ class ChooserController extends Controller
     public function chooseEndpointPair()
     {
         $probability = $this->endpoints->generateEndpointProbability();
+
+        if($probability->count() < 2)
+        {
+            return false;
+        }
 
         $first_favorite = $this->getRandomEndpoint($probability);
 

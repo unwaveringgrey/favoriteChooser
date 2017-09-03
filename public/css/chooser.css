@@ -6,3 +6,11 @@ div.favorite_box {
     font-weight: bold;
     color: #000000;
 }
+
+div.error_box {
+    margin:10px 22px;
+    vertical-align:middle;
+    font-weight: bold;
+    color: red;
+    background-color: #FFBABA;
+}

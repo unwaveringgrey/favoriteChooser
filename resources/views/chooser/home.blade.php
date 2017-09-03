@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
+    @if (session('error'))
+        <div class="error_box">
+            {{ session('error') }}
+        </div>
+    @endif
     <div class="container">
         <form role="form" name="favorite_chooser" method="POST" action="{{ route('favorite_submit') }}">
             {{ csrf_field() }}
