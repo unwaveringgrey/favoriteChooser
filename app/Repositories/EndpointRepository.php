@@ -61,7 +61,7 @@ class EndpointRepository implements EndpointRepositoryInterface
 
 
         $endpoints = DB::table('endpoints')
-            ->join('votes', 'endpoints.id', '=', 'votes.endpoint_id')
+            ->leftjoin('votes', 'endpoints.id', '=', 'votes.endpoint_id')
             ->select('endpoints.*', DB::raw("(SELECT votes.positive_votes - votes.negative_votes) as net_votes")
                 , DB::raw("(SELECT Case When net_votes > 0 then net_votes+1 else 1 end  ) as probability"))
             ->orderBy('probability', 'DESC')
