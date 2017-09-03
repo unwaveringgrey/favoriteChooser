@@ -81,6 +81,7 @@ class HomeController extends Controller
      */
     public function loadTopEndpoints($top)
     {
+        $loaded_top = array();
         foreach ($top as $current)
         {
             $loaded_top[] = array('data'=>$this->endpoints->loadEndpoint($current->url), 'net_votes'=>$current->net_votes, 'image_url'=>$current->image_url);
