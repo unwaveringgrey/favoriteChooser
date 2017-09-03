@@ -15,6 +15,8 @@
 
 Route::get('/', 'HomeController@home')->name('home');
 
+Route::get('/simple_home', 'HomeController@simple_home')->name('simple_home');
+
 Route::get('/chooser', 'ChooserController@play')->name('favorite_select');
 
 Route::post('/chooser', 'ChooserController@submit')->name('favorite_submit');

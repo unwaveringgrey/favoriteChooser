@@ -3,8 +3,11 @@
 namespace App\Exceptions;
 
 use Exception;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Redirect;
 
 class Handler extends ExceptionHandler
 {
@@ -44,6 +47,12 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        //Catch timeouts on the API Calls.
+        if ($exception instanceof ConnectException) {
+            //redirect to home page with an error message
+            return Redirect::route('simple_home')->with('error', 'API timed out. Please try again.');
+        }
+
         return parent::render($request, $exception);
     }
 

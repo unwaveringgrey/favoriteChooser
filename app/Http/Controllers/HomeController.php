@@ -47,6 +47,19 @@ class HomeController extends Controller
     }
 
     /**
+     * Serves the home page, minus the top favorites
+     *
+     * @return view
+     */
+    public function simple_home()
+    {
+        $top_favorites = array();
+
+        return view('chooser.home', ['top_favorites' => $top_favorites]);
+    }
+
+
+    /**
      * Serves a page containing a single random favorite
      *
      * @return view
